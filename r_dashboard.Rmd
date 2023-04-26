@@ -1,0 +1,226 @@
+---
+title: "Indian Startups Analysis"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(dplyr)
+library(magrittr)
+library(flexdashboard)
+library(flexdashboard)
+library(tidyverse)
+library(highcharter)                  
+library(gt)                  
+library(htmltools)                
+library(viridis)
+library(readr)
+```
+
+```{r}
+
+#Startups1 <- read.csv("E:/R language/new_project/Startups1.csv")
+#View(Startups1)
+#fix(Startups1)
+
+
+```
+
+
+Tab1
+===========================
+
+Column {data-width=850}
+-----------------------------------------------------------------------
+
+
+```{r fig.width=10, fig.height=8}
+
+# Most popular companies by funding amount
+custom_colors <- viridis::mako(n = 15)
+
+Startups1 %>%
+  group_by(Company) %>%
+  summarise(`Funding Amount in $`= sum(`Funding Amount in $`)) %>%
+  arrange(desc(`Funding Amount in $`)) %>% # Closing parenthesis added here
+  head(10) %>%
+  hchart('column', hcaes(x = Company, y = `Funding Amount in $`), color = custom_colors) %>% # Changed x axis to company, and removed color argument
+  hc_add_theme(hc_theme_google()) %>%
+  hc_tooltip(pointFormat = '<b>Funding Amount: </b> ${point.y:.2f} million<br>') %>% # Changed tooltip to show funding amount
+  hc_title(text = 'Most popular companies by funding amount',
+           style = list(fontSize = '25px', fontWeight='bold'))
+
+
+```
+
+
+Column {data-width=490}
+-----------------------------------------------------------------------
+
+### {.no-padding}
+
+```{r}
+
+# Most popular company in bengaluru by funding amount
+Startups1 %>% 
+  arrange(desc(City=="Benguluru")) %>%  head(5) %>% 
+  hchart('line', hcaes(x =Company , y = `Funding Amount in $`)) %>% 
+  hc_add_theme(hc_theme_google()) %>% 
+  hc_tooltip(pointFormat='<b>Proportion: </b> {point.percentage:,.2f}%') %>% 
+  hc_title(text = 'Most popular company in Benguluru',
+           style = list(fontSize = '25px', fontWeight = 'bold')) %>% 
+  hc_subtitle(text = 'By funding amount',
+              style = list(fontSize = '16px')) %>% 
+  hc_credits(enabled = TRUE, text = '@miguelfzzz')
+
+```
+
+
+### {.no-padding}
+
+```{r}
+
+# Number of Invester by City
+custom_colors <- viridis::plasma(n = 5)
+
+Startups1 %>% 
+  arrange(desc(City)) %>% 
+  head(5) %>% 
+  hchart('bar', hcaes(x = City, y = `No. of Investors`, color = custom_colors)) %>%
+  hc_add_theme(hc_theme_google()) %>% 
+  hc_tooltip(pointFormat = '<b>Number of investers: </b> {point.y} <br>') %>% 
+  hc_title(text = 'Number of Investers',
+           style = list(fontSize = '25px', fontWeight = 'bold')) %>% 
+  hc_subtitle(text = 'By City',
+              style = list(fontSize = '16px')) %>% 
+  hc_credits(enabled = TRUE, text = '@miguelfzzz')
+  
+
+```
+
+
+
+### {.no-padding}
+
+
+```{r}
+
+# year wise funding Amount
+custom_colors <- viridis::mako(n = 1)
+
+Startups1 %>%
+  group_by(`Starting Year`) %>%
+  summarise(`Funding Amount in $` = sum(`Funding Amount in $`)) %>%
+  arrange(desc(`Funding Amount in $`)) %>% 
+  head(10) %>%
+  hchart('column', hcaes(x = `Starting Year`, y = `Funding Amount in $`), color = custom_colors) %>% 
+  hc_add_theme(hc_theme_google()) %>%
+  hc_tooltip(pointFormat = '<b>Funding Amount: </b> ${point.y:.2f} million<br>') %>% 
+  hc_title(text = 'Top 10 Funding amount Startups',
+           style = list(fontSize = '25px', fontWeight='bold')) %>%
+  hc_subtitle(text = 'By Funding Amount',
+              style = list(fontSize = '16px')) %>% 
+  hc_credits(enabled = TRUE, text = '@miguelfzzz')
+
+```
+
+
+Tab2
+========================================
+
+
+Column {data-width=850}
+-----------------------------------------------------------------------
+
+
+```{r fig.width=10, fig.height=8}
+
+#company with highest number of investers
+custom_colors <- viridis::plasma(n = 5)
+
+Startups1 %>% 
+  arrange(desc(`No. of Investors`)) %>% 
+  head(5) %>% 
+  hchart('pie',init.angle=90,hcaes(x = Company, y = `No. of Investors`,label = Company, color = custom_colors)) %>%
+  hc_add_theme(hc_theme_google()) %>%
+  hc_tooltip(pointFormat = '<b>Number of investers: </b> {point.y} <br>') %>% 
+  hc_title(text = 'Company with highest number of Investers',
+           style = list(fontSize = '25px', fontWeight = 'bold')) %>% 
+  hc_subtitle(text = 'By Investers',
+              style = list(fontSize = '16px')) %>% 
+  hc_credits(enabled = TRUE, text = '@miguelfzzz')
+
+```
+
+
+Column {data-width=490}
+-----------------------------------------------------------------------
+
+### {.no-padding}
+
+```{r}
+
+# Most popular company in bengaluru by funding amount
+Startups1 %>% 
+  arrange(desc(City=="Benguluru")) %>%  head(5) %>% 
+  hchart('line', hcaes(x =Company , y = `Funding Amount in $`)) %>% 
+  hc_add_theme(hc_theme_google()) %>% 
+  hc_tooltip(pointFormat='<b>Proportion: </b> {point.percentage:,.2f}%') %>% 
+  hc_title(text = 'Most popular company in Benguluru',
+           style = list(fontSize = '25px', fontWeight = 'bold')) %>% 
+  hc_subtitle(text = 'By funding amount',
+              style = list(fontSize = '16px')) %>% 
+  hc_credits(enabled = TRUE, text = '@miguelfzzz')
+
+```
+
+### {.no-padding}
+
+```{r}
+
+# Number of Invester by City
+custom_colors <- viridis::plasma(n = 5)
+
+Startups1 %>% 
+  arrange(desc(City)) %>% 
+  head(5) %>% 
+  hchart('bar', hcaes(x = City, y = `No. of Investors`, color = custom_colors)) %>%
+  hc_add_theme(hc_theme_google()) %>% 
+  hc_tooltip(pointFormat = '<b>Number of investers: </b> {point.y} <br>') %>% 
+  hc_title(text = 'Number of Investers',
+           style = list(fontSize = '25px', fontWeight = 'bold')) %>% 
+  hc_subtitle(text = 'By City',
+              style = list(fontSize = '16px')) %>% 
+  hc_credits(enabled = TRUE, text = '@miguelfzzz')
+  
+
+```
+
+
+### {.no-padding}
+
+
+```{r}
+
+# year wise funding Amount
+custom_colors <- viridis::mako(n = 1)
+
+Startups1 %>%
+  group_by(`Starting Year`) %>%
+  summarise(`Funding Amount in $` = sum(`Funding Amount in $`)) %>%
+  arrange(desc(`Funding Amount in $`)) %>% 
+  head(10) %>%
+  hchart('column', hcaes(x = `Starting Year`, y = `Funding Amount in $`), color = custom_colors) %>% 
+  hc_add_theme(hc_theme_google()) %>%
+  hc_tooltip(pointFormat = '<b>Funding Amount: </b> ${point.y:.2f} million<br>') %>% 
+  hc_title(text = 'Top 10 Funding amount Startups',
+           style = list(fontSize = '25px', fontWeight='bold')) %>%
+  hc_subtitle(text = 'By Funding Amount',
+              style = list(fontSize = '16px')) %>% 
+  hc_credits(enabled = TRUE, text = '@miguelfzzz')
+
+```
+
